@@ -157,7 +157,7 @@ function renderPage(index) {
                     <img id="strain_image_${question.questionNumber}"
                         src=""
                         alt="Strain Cycle Image"
-                        style="max-height:650px; width:auto; border:1px solid #ddd; padding:5px; margin-bottom:30px; display:none;">
+                        style="height:650px; width:auto; border:1px solid #ddd; padding:5px; margin-bottom:30px; display:none;">
 
                     <div id="missing_image_${question.questionNumber}"
                         style="display:none; color:#a00; font-size:18px; font-weight:bold; text-align:center; margin:20px;">
