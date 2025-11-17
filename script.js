@@ -148,6 +148,11 @@ function renderPage(index) {
                     ${index === cachedQuestions.length - 1 ? "Submit Page" : "Next"}
                 </button>
 
+                <button onclick="goToPage(${question.questionNumber}, ${cachedQuestions.length - 1})"
+                        style="margin-left: 20px; background:#4CAF50; color:white;">
+                    Go to Last Question
+                </button>
+
             </div>
             <div style="justify-items:center">
                 <div class="image-container">
