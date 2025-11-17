@@ -153,12 +153,13 @@ function renderPage(index) {
                             <option value="Last_Cycle">Last Cycle</option>
                         </select>
                     </div>
-
-                    <img id="strain_image_${question.questionNumber}"
-                        src=""
-                        alt="Strain Cycle Image"
-                        style="height:650px; width:auto; border:1px solid #ddd; padding:5px; margin-bottom:30px; display:none;">
-
+                    <div style = "height:650px">
+                    
+                            <img id="strain_image_${question.questionNumber}"
+                                src=""
+                                alt="Strain Cycle Image"
+                                style="height:650px; width:auto; border:1px solid #ddd; padding:5px; margin-bottom:30px; display:none;">
+                    </div>
                     <div id="missing_image_${question.questionNumber}"
                         style="display:none; color:#a00; font-size:18px; font-weight:bold; text-align:center; margin:20px;">
                     </div>
