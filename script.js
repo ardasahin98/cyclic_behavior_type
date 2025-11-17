@@ -143,8 +143,10 @@ function renderPage(index) {
                 <button onclick="goToPage(${question.questionNumber}, ${index - 1})"
                         ${index === 0 ? "disabled" : ""}>Back</button>
 
-                <button onclick="goToPage(${question.questionNumber}, ${index + 1})"
-                        ${index === cachedQuestions.length - 1 ? "disabled" : ""}>Next</button>
+                <button onclick="goToPage(${question.questionNumber}, 
+                        ${index === cachedQuestions.length - 1 ? -2 : index + 1})">
+                    ${index === cachedQuestions.length - 1 ? "Submit Page" : "Next"}
+                </button>
 
             </div>
             <div style="justify-items:center">
