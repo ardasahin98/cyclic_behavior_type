@@ -408,24 +408,27 @@ function saveAndNext(q) {
 function saveAnswer(q) {
     if (!responses[q]) responses[q] = {};
 
-    const behavior = document.querySelector(`input[name="behavior_${q}"]:checked`);
+    // single checkbox for "data not usable"
+    const unusableCheckbox = document.querySelector(`input[name="behavior_${q}"]`);
     const slider = document.getElementById(`slider_${q}`);
     const std = document.getElementById(`stddev_${q}`);
     const com = document.getElementById(`comments_${q}`);
 
-    if (!behavior) return;
+    const isUnusable = unusableCheckbox && unusableCheckbox.checked;
 
-    if (behavior.value === "data not usable") {
+    if (isUnusable) {
+        // data not usable case
         responses[q].behavior = "data not usable";
         responses[q].slider = "";
         responses[q].stddev = "";
     } else {
-        responses[q].behavior = slider.value;
-        responses[q].slider = slider.value;
-        responses[q].stddev = std.value;
+        // normal slider case
+        responses[q].behavior = slider ? slider.value : "";
+        responses[q].slider = slider ? slider.value : "";
+        responses[q].stddev = std ? std.value : "";
     }
 
-    responses[q].comments = com.value;
+    responses[q].comments = com ? com.value : "";
 }
 
 function loadSavedAnswer(q) {
