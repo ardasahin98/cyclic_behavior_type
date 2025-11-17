@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SBT Form</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstat/1.9.5/jstat.min.js"></script>
+</head>
+
+<body>
+
+    <!-- LOGIN PAGE (NEW) -->
+    <div id="login-page" class="page active">
+        <div class="question-header">
+            <h1>Researcher Login</h1>
+            <p>Please sign in with your Google account to begin or update your responses.</p>
+        </div>
+        <div class="navigation-buttons">
+            <button onclick="googleLogin()">Sign in with Google</button>
+        </div>
+    </div>
+
+    <!-- QUIZ PAGES (UNCHANGED) -->
+    <div id="quiz-container" style="display:none">
+        <div class="page" id="page-1">
+            <div class="question-header">
+                <h1>Behavior Type Selection Quiz</h1>
+                <p>This form is designed to guide you in selecting the behavior type…</p>
+            </div>
+
+            <div class="question-header">
+                <label><b>Name of the Researcher:</b></label>
+                <input type="text" id="researcher-name" placeholder="Enter your name">
+            </div>
+
+            <div class="navigation-buttons">
+                <button onclick="navigatePage(0)">Next</button>
+            </div>
+        </div>
+
+        <!-- Dynamic questions injected here -->
+
+        <div class="page" id="last_page">
+            <div class="question-header">
+                <h1>Quiz Completed!</h1>
+                <p>You can submit or review your answers.</p>
+            </div>
+            <div class="navigation-buttons">
+                <button onclick="navigatePage(cachedQuestions.length - 1)">Back</button>
+                <button onclick="submitForm()">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
