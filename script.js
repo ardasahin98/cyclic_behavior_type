@@ -139,8 +139,8 @@ function renderPage(index) {
                 <h2>Question ${question.questionNumber}/57</h2>
             </div>
             <div class="navigation-buttons" style="margin-top:-10px">
-                <button onclick="saveAnswer(${question.questionNumber}); navigatePage(${index - 1})" ${index === 0 ? 'disabled' : ''}>Back</button>
-                <button onclick="saveAnswer(${question.questionNumber}); ${index === cachedQuestions.length - 1 ? 'navigatePage(-2)' : `navigatePage(${index + 1})`}">Next</button>
+                <button onclick="goToPage(${question.questionNumber}); navigatePage(${index - 1})" ${index === 0 ? 'disabled' : ''}>Back</button>
+                <button onclick="goToPage(${question.questionNumber}); ${index === cachedQuestions.length - 1 ? 'navigatePage(-2)' : `navigatePage(${index + 1})`}">Next</button>
             </div>
             <div style="justify-items:center">
                 <div class="image-container">
@@ -194,8 +194,8 @@ function renderPage(index) {
                 </div>
             </div>
             <div class="navigation-buttons" style="margin-top:-10px">
-                <button onclick="saveAnswer(${question.questionNumber}); navigatePage(${index - 1})" ${index === 0 ? 'disabled' : ''}>Back</button>
-                <button onclick="saveAnswer(${question.questionNumber}); ${index === cachedQuestions.length - 1 ? 'navigatePage(-2)' : `navigatePage(${index + 1})`}">Next</button>
+                <button onclick="goToPage(${question.questionNumber}); navigatePage(${index - 1})" ${index === 0 ? 'disabled' : ''}>Back</button>
+                <button onclick="goToPage(${question.questionNumber}); ${index === cachedQuestions.length - 1 ? 'navigatePage(-2)' : `navigatePage(${index + 1})`}">Next</button>
             </div>
         `;
         container.appendChild(questionDiv);
@@ -476,4 +476,12 @@ async function submitForm() {
         console.error("Firestore error:", error);
         alert("Error saving data: " + error.message);
     }
+}
+
+function goToPage(currentQuestionNumber, nextPageIndex) {
+    // Save only if current question is valid
+    if (currentQuestionNumber >= 1 && currentQuestionNumber <= 57) {
+        saveAnswer(currentQuestionNumber);
+    }
+    navigatePage(nextPageIndex);
 }
