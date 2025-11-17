@@ -142,7 +142,7 @@ function renderPage(index) {
 
                 <button onclick="goToPage(${question.questionNumber}, 0)"
                         style="margin-left: 20px; background:#4CAF50; color:white;">
-                    Go to Last Question
+                    Go to First Question
                 </button>
             
                 <button onclick="goToPage(${question.questionNumber}, ${index - 1})"
@@ -170,7 +170,7 @@ function renderPage(index) {
                             <option value="Last_Cycle">Last Cycle</option>
                         </select>
                     </div>
-                    <div style = "height:650px; margin-bottom: 10px;">
+                    <div style = "height:650px; margin-bottom: 20px;">
                     
                             <img id="strain_image_${question.questionNumber}"
                                 src=""
@@ -212,7 +212,10 @@ function renderPage(index) {
             </div>
             <div class="navigation-buttons" style="margin-top:-10px">
                 <button onclick="goToPage(${question.questionNumber}); navigatePage(${index - 1})" ${index === 0 ? 'disabled' : ''}>Back</button>
-                <button onclick="goToPage(${question.questionNumber}); ${index === cachedQuestions.length - 1 ? 'navigatePage(-2)' : `navigatePage(${index + 1})`}">Next</button>
+                <button onclick="goToPage(${question.questionNumber}, 
+                        ${index === cachedQuestions.length - 1 ? -2 : index + 1})">
+                    ${index === cachedQuestions.length - 1 ? "Submit Page" : "Next"}
+                </button>
             </div>
         `;
         container.appendChild(questionDiv);
@@ -251,7 +254,7 @@ function renderPage(index) {
             imgEl.onerror = function () {
                 imgEl.style.display = "none";
                 msgEl.style.display = "block";
-                msgEl.textContent = `${strainFolder.replace("_", " ").replace("_", " ")} is not available for Test Number ${testNum}.`;
+                msgEl.textContent = `${strainFolder.replace("_", " ").replace("_", " ")} is not available for this test`;
             };
 
             imgEl.src = imgPath;
