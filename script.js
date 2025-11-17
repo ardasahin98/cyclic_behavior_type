@@ -139,6 +139,11 @@ function renderPage(index) {
                 <h2>Question ${question.questionNumber}/57</h2>
             </div>
             <div class="navigation-buttons">
+
+                <button onclick="goToPage(${question.questionNumber}, 0)"
+                        style="margin-left: 20px; background:#4CAF50; color:white;">
+                    Go to Last Question
+                </button>
             
                 <button onclick="goToPage(${question.questionNumber}, ${index - 1})"
                         ${index === 0 ? "disabled" : ""}>Back</button>
