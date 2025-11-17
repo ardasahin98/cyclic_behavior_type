@@ -138,9 +138,17 @@ function renderPage(index) {
             <div class="question-header">
                 <h2>Question ${question.questionNumber}/57</h2>
             </div>
-            <div class="navigation-buttons" style="margin-top:-10px">
-                <button onclick="goToPage(${question.questionNumber}); navigatePage(${index - 1})" ${index === 0 ? 'disabled' : ''}>Back</button>
-                <button onclick="goToPage(${question.questionNumber}); ${index === cachedQuestions.length - 1 ? 'navigatePage(-2)' : `navigatePage(${index + 1})`}">Next</button>
+            <div class="navigation-buttons">
+                <button onclick="goToPage(${question.questionNumber}, ${index - 1})"
+                        ${index === 0 ? "disabled" : ""}>Back</button>
+
+                <button onclick="goToPage(${question.questionNumber}, ${index + 1})"
+                        ${index === cachedQuestions.length - 1 ? "disabled" : ""}>Next</button>
+
+                <button onclick="goToPage(${question.questionNumber}, ${cachedQuestions.length - 1})"
+                        style="margin-left: 20px; background:#4CAF50; color:white;">
+                    Go to Last Question
+                </button>
             </div>
             <div style="justify-items:center">
                 <div class="image-container">
@@ -450,7 +458,6 @@ function loadSavedAnswer(q) {
     document.getElementById(`comments_${q}`).value = r.comments || "";
 }
 
-
 // ------------------ SUBMIT TO FIRESTORE ------------------
 
 async function submitForm() {
@@ -487,4 +494,43 @@ function goToPage(currentQuestionNumber, nextPageIndex) {
         saveAnswer(currentQuestionNumber);
     }
     navigatePage(nextPageIndex);
+}
+
+function downloadExcel() {
+    if (!currentUser || !responses) {
+        alert("Please submit responses first.");
+        return;
+    }
+
+    // Create array for Excel
+    const excelData = [];
+
+    excelData.push(["Researcher Name", document.getElementById("researcher-name").value]);
+    excelData.push(["Email", currentUser.email]);
+    excelData.push([]);
+    excelData.push(["Question #", "Behavior", "Slider", "Std Dev", "Comments"]);
+
+    // Loop through each question
+    Object.keys(responses).forEach(q => {
+        excelData.push([
+            q,
+            responses[q].behavior || "",
+            responses[q].slider || "",
+            responses[q].stddev || "",
+            responses[q].comments || ""
+        ]);
+    });
+
+    // Create worksheet
+    const worksheet = XLSX.utils.aoa_to_sheet(excelData);
+
+    // Create workbook
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Responses");
+
+    // Generate file name
+    const fileName = `responses_${currentUser.uid}.xlsx`;
+
+    // Trigger download
+    XLSX.writeFile(workbook, fileName);
 }
