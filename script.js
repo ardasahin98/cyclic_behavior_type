@@ -153,7 +153,7 @@ function renderPage(index) {
                             <option value="Last_Cycle">Last Cycle</option>
                         </select>
                     </div>
-                    <div style = "height:650px">
+                    <div style = "height:650px; margin-bottom: 10px;">
                     
                             <img id="strain_image_${question.questionNumber}"
                                 src=""
