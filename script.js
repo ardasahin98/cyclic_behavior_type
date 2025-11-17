@@ -106,60 +106,188 @@ function navigatePage(index) {
 // ------------------ PAGE RENDERING (UNCHANGED EXCEPT LOADING) ------------------
 
 function renderPage(index) {
-    const pages = document.querySelectorAll(".page");
-    pages.forEach((page) => page.classList.remove("active"));
-
     if (index === -1) {
-        document.getElementById("page-1").classList.add("active");
-        return;
-    }
+        document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+        document.getElementById('page-1').classList.add('active');
+    } else if (index === -2) {
+        document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+        document.getElementById('last_page').classList.add('active');
+    } else if (index >= 0 && index < cachedQuestions.length) {
+        document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+        const container = document.getElementById('quiz-container');
+        const question = cachedQuestions[index];
+        container.querySelector('.dynamic-question')?.remove();
 
-    if (index === cachedQuestions.length) {
-        document.getElementById("last_page").classList.add("active");
-        return;
-    }
+        const savedBehavior = responses[question.questionNumber]?.behavior || "";
+        const savedComments = responses[question.questionNumber]?.comments || "";
+        const savedSliderValue = responses[question.questionNumber]?.sliderValue || 0.5;
+        const savedStdDev = responses[question.questionNumber]?.standardDeviation || 0.1;
 
-    const questionObj = cachedQuestions[index];
-    const pageId = `question_page_${index}`;
+        const questionDiv = document.createElement('div');
+        questionDiv.className = 'page active dynamic-question';
 
-    let pageDiv = document.getElementById(pageId);
-    if (!pageDiv) {
-        pageDiv = document.createElement("div");
-        pageDiv.className = "page";
-        pageDiv.id = pageId;
-        document.getElementById("quiz-container").appendChild(pageDiv);
-
-        pageDiv.innerHTML = `
+        questionDiv.innerHTML = `
             <div class="question-header">
-                <h2>Question ${index + 1}</h2>
-                <img src="${questionObj.image}" class="question-image">
+                <h2>Question ${question.questionNumber}/57</h2>
             </div>
-
-            <div class="behavior-options">
-                <label><input type="radio" name="behavior_${index}" value="data not usable"> Data Not Usable</label>
-                <label><input type="radio" name="behavior_${index}" value="slider"> Select Behavior Type</label>
+            <div class="navigation-buttons" style="margin-top:-10px">
+                <button onclick="saveAnswer(${question.questionNumber}); navigatePage(${index - 1})" ${index === 0 ? 'disabled' : ''}>Back</button>
+                <button onclick="saveAnswer(${question.questionNumber}); ${index === cachedQuestions.length - 1 ? 'navigatePage(-2)' : `navigatePage(${index + 1})`}">Next</button>
             </div>
+            <div style="justify-items:center">
+                <div class="image-container">
+                    <div style="text-align:center; margin-bottom:10px;">
+                        <select id="strain_select_${question.questionNumber}" class="strain-selector" style="position:static;">
+                            <option value="3_Strain_Cycle">3% Strain</option>
+                            <option value="4_Strain_Cycle">4% Strain</option>
+                            <option value="5_Strain_Cycle">5% Strain</option>
+                            <option value="6_Strain_Cycle">6% Strain</option>
+                            <option value="Last_Cycle">Last Cycle</option>
+                        </select>
+                    </div>
 
-            <div id="slider_container_${index}" style="display:none">
-                <input type="range" id="slider_${index}" min="0" max="1" step="0.01">
-                <label>Std Dev:</label>
-                <input type="number" id="stddev_${index}" step="0.01">
+                    <img id="strain_image_${question.questionNumber}"
+                        src=""
+                        alt="Strain Cycle Image"
+                        style="max-height:650px; width:auto; border:1px solid #ddd; padding:5px; margin-bottom:30px; display:none;">
+
+                    <div id="missing_image_${question.questionNumber}"
+                        style="display:none; color:#a00; font-size:18px; font-weight:bold; text-align:center; margin:20px;">
+                    </div>
+                </div>
             </div>
-
-            <textarea id="comments_${index}" placeholder="Comments"></textarea>
-
-            <div class="navigation-buttons">
-                <button onclick="navigatePage(${index - 1})">Back</button>
-                <button onclick="saveAndNext(${index})">Next</button>
+            <div style="display:flex; margin-top:-40px">
+                <div class="multiple-choice" style="padding-left:10%">
+                    <p>Please select the behavior type:</p>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <label>Clay-like (0.01)</label>
+                        <input type="range" id="slider_${question.questionNumber}" min="0.01" max="0.99" step="0.01" value="${savedSliderValue}" ${savedBehavior === "data not usable" ? "disabled" : ""}>
+                        <label>Sand-like (0.99)</label>
+                    </div>
+                    <p>Current Value: 
+                        <input type="number" id="slider_input_${question.questionNumber}" value="${savedSliderValue}" min="0.01" max="0.99" step="0.01" style="width: 60px;" ${savedBehavior === "data not usable" ? "disabled" : ""}>
+                        <span id="mean_range_${question.questionNumber}" style="margin-left:10px; font-size: 14px; color: #888;"></span>
+                    </p>
+                    <label>
+                        <input type="checkbox" name="behavior_${question.questionNumber}" value="data not usable" ${savedBehavior === "data not usable" ? "checked" : ""}>
+                        Data is not usable
+                    </label>
+                    <div style="margin-top:10px">
+                        <label><b>Standard Deviation:</b></label>
+                        <input type="number" id="stddev_${question.questionNumber}" value="${savedStdDev}" min = "0.01" step="0.01" style="width:100px;" ${savedBehavior === "data not usable" ? "disabled" : ""}>
+                        <span id="max_stddev_${question.questionNumber}" style="margin-left:10px; font-size: 14px; color: #888;"></span>
+                    </div>
+                </div>
+                <div id="plot_${question.questionNumber}" style="width:500px;height:300px;margin:30px;"></div>
+                <div class="comments-section" style="margin-right: auto; width: 400px;">
+                    <h3>Comments</h3>
+                    <textarea id="comments_${question.questionNumber}" rows="5" placeholder="Enter your comments here...">${savedComments}</textarea>
+                </div>
+            </div>
+            <div class="navigation-buttons" style="margin-top:-10px">
+                <button onclick="saveAnswer(${question.questionNumber}); navigatePage(${index - 1})" ${index === 0 ? 'disabled' : ''}>Back</button>
+                <button onclick="saveAnswer(${question.questionNumber}); ${index === cachedQuestions.length - 1 ? 'navigatePage(-2)' : `navigatePage(${index + 1})`}">Next</button>
             </div>
         `;
+        container.appendChild(questionDiv);
 
-        const radios = pageDiv.querySelectorAll(`input[name="behavior_${index}"]`);
-        radios.forEach(r => r.addEventListener("change", () => updateSliderVisibility(index)));
+        const slider = document.getElementById(`slider_${question.questionNumber}`);
+        const sliderInput = document.getElementById(`slider_input_${question.questionNumber}`);
+        const stddevInput = document.getElementById(`stddev_${question.questionNumber}`);
+        const radioButton = document.querySelector(`input[name="behavior_${question.questionNumber}"][value="data not usable"]`);
+
+        const maxStdSpan = document.getElementById(`max_stddev_${question.questionNumber}`);
+
+        const strainSelect = document.getElementById(`strain_select_${question.questionNumber}`);
+
+        // Default selection = 3% strain (already selected)
+        updateStrainImage(question.questionNumber, question.testNumber);
+
+        // Change image automatically when the user selects a different strain
+        strainSelect.addEventListener("change", () => {
+            updateStrainImage(question.questionNumber, question.testNumber);
+        });
+
+        // ----- IMAGE UPDATE FUNCTION -----
+        function updateStrainImage(qNum, testNum) {
+            const strainFolder = document.getElementById(`strain_select_${qNum}`).value;
+            const imgPath = `/images/${strainFolder}/Test_Number_${testNum}.png`;
+
+            const imgEl = document.getElementById(`strain_image_${qNum}`);
+            const msgEl = document.getElementById(`missing_image_${qNum}`);
+
+            // Try loading the image
+            imgEl.onload = function () {
+                imgEl.style.display = "block";
+                msgEl.style.display = "none";
+            };
+
+            imgEl.onerror = function () {
+                imgEl.style.display = "none";
+                msgEl.style.display = "block";
+                msgEl.textContent = `${strainFolder.replace("_", " ").replace("_", " ")} is not available for Test Number ${testNum}.`;
+            };
+
+            imgEl.src = imgPath;
+        }
+
+        function updateMaxStddevDisplay() {
+            const mean = parseFloat(slider.value);
+            if (!isNaN(mean) && mean > 0 && mean < 1) {
+                const maxStdev = getMaxStd(mean);
+                maxStdSpan.textContent = `(max: ${maxStdev.toFixed(3)})`;
+                stddevInput.max = maxStdev.toFixed(3);
+
+                const currentStd = parseFloat(stddevInput.value);
+                if (!isNaN(currentStd) && currentStd > maxStdev) {
+                    stddevInput.value = maxStdev.toFixed(3);  // auto-correct stddev
+                }
+            } else {
+                maxStdSpan.textContent = "";
+                stddevInput.removeAttribute("max");
+            }
+        }
+ 
+
+        slider.addEventListener('input', () => (sliderInput.value = slider.value));
+        sliderInput.addEventListener('input', () => (slider.value = sliderInput.value));
+        slider.addEventListener('input', updateMaxStddevDisplay);
+        sliderInput.addEventListener('input', updateMaxStddevDisplay);
+        updateMaxStddevDisplay();  // call once on load
+        
+        radioButton.addEventListener('change', (event) => {
+            const isDisabled = event.target.checked;
+            slider.disabled = isDisabled;
+            sliderInput.disabled = isDisabled;
+            stddevInput.disabled = isDisabled;
+        });
+
+    slider.addEventListener('input', () => {
+        sliderInput.value = slider.value;
+        plotBeta(question.questionNumber);
+    });
+
+    sliderInput.addEventListener('input', () => {
+        slider.value = sliderInput.value;
+        plotBeta(question.questionNumber);
+    });
+
+    stddevInput.addEventListener('input', () => {
+        plotBeta(question.questionNumber);
+    });
+    stddevInput.addEventListener('input', () => {
+        const mean = parseFloat(slider.value);
+        const maxStd = getMaxStd(mean);
+        const enteredStd = parseFloat(stddevInput.value);
+        if (!isNaN(enteredStd) && enteredStd > maxStd) {
+            stddevInput.value = maxStd.toFixed(3);
+        }
+    });
+    plotBeta(question.questionNumber);
+    } else {
+        console.error(`Invalid page index: ${index}`);
     }
 
-    loadSavedAnswer(index);
-    pageDiv.classList.add("active");
 }
 
 
