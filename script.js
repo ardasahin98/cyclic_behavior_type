@@ -99,9 +99,17 @@ async function loadQuestions() {
 // ------------------ PAGE NAVIGATION (UNCHANGED) ------------------
 
 function navigatePage(index) {
-    renderPage(index);
+    console.log(`Navigating to index: ${index}`);
+    if (index >= 0 && index < cachedQuestions.length) {
+        renderPage(index);
+    } else if (index === -1) {
+        renderPage(-1);
+    } else if (index === -2) {
+        renderPage(-2);
+    } else {
+        console.error(`Invalid navigation request. Index: ${index}`);
+    }
 }
-
 
 // ------------------ PAGE RENDERING (UNCHANGED EXCEPT LOADING) ------------------
 
@@ -300,6 +308,88 @@ function getMaxStd(mean) {
         if (std > bestStd) bestStd = std;
     }
     return bestStd;
+}
+
+function plotBeta(questionNumber) {
+    const meanInput = document.getElementById(`slider_${questionNumber}`);
+    const stddevInput = document.getElementById(`stddev_${questionNumber}`);
+    const plotDiv = document.getElementById(`plot_${questionNumber}`);
+
+    if (!meanInput || !stddevInput || !plotDiv) return;
+
+    const mean = parseFloat(meanInput.value);
+    const userStd = parseFloat(stddevInput.value);
+    const maxStd = getMaxStd(mean);
+    const stddev = Math.min(userStd, maxStd);
+
+    if (isNaN(mean) || isNaN(stddev) || stddev <= 0 || mean <= 0 || mean >= 1) {
+        // alert("Please provide a valid mean (0–1) and a positive standard deviation.");
+        return;
+    }
+    
+    const variance = stddev ** 2;
+
+    // Compute alpha and beta parameters
+    const common = (mean * (1 - mean) / variance - 1);
+    const alpha = mean * common;
+    const beta = (1 - mean) * common;
+
+    if (alpha <= 1 || beta <= 1) {
+        Plotly.newPlot(plotDiv, [{
+            x: [0.5],
+            y: [0.5],
+            mode: 'text',
+            text: [`Invalid parameters:<br>α = ${alpha.toFixed(2)}, β = ${beta.toFixed(2)}<br>Please adjust mean or std.`],
+            textposition: 'middle center',
+            type: 'scatter'
+        }], {
+            xaxis: { visible: false },
+            yaxis: { visible: false },
+            margin: { t: 10, r: 30 },
+            showlegend: false
+        });
+        return;
+    }
+
+    const x = [];
+    const y = [];
+
+    for (let i = 0; i <= 1000; i++) {
+        const xi = i / 1000;
+        const yi = jStat.beta.pdf(xi, alpha, beta);
+        x.push(xi);  // convert to percentage for plotting on 0–100 scale
+        y.push(yi);
+    }
+
+    Plotly.newPlot(plotDiv, [
+        {
+            x: x,
+            y: y,
+            mode: 'lines',
+            line: { color: 'black', width: 3 },
+            name: `Beta PDF`,
+        },
+    ], {
+        margin: { t: 5, r: 10 },
+        xaxis: {
+            title: 'Cyclic Behavior Type, CBT',
+            range: [-0.05, 1.05],
+            tickmode: 'linear',
+            tick0: 0,
+            dtick: 0.1  // or 5 for finer ticks
+        },
+        yaxis: {
+                title: 'Density',
+                range: [0, Math.max(...y) * 1.1]
+            },
+        legend: {
+            title: {
+                    text: `Mean: ${mean.toFixed(2)} | Std: ${stddev.toFixed(2)}<br>Alpha: ${alpha.toFixed(2)} | Beta: ${beta.toFixed(2)}` },
+            x: -0.3,
+            y: -0.5
+        },
+        showlegend: true
+    });
 }
 // ------------------ SAVE & RESTORE ANSWERS ------------------
 
