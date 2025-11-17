@@ -99,16 +99,17 @@ async function loadQuestions() {
 // ------------------ PAGE NAVIGATION (UNCHANGED) ------------------
 
 function navigatePage(index) {
-    console.log(`Navigating to index: ${index}`);
-    if (index >= 0 && index < cachedQuestions.length) {
-        renderPage(index);
-    } else if (index === -1) {
-        renderPage(-1);
-    } else if (index === -2) {
-        renderPage(-2);
-    } else {
-        console.error(`Invalid navigation request. Index: ${index}`);
+    const pages = document.querySelectorAll(".page");
+
+    // allow index = cachedQuestions.length (submit page)
+    if (index < -1 || index > cachedQuestions.length) {
+        console.error("Invalid navigation request. Index:", index);
+        return;
     }
+
+    pages.forEach(page => page.classList.remove("active"));
+
+    renderPage(index);
 }
 
 // ------------------ PAGE RENDERING (UNCHANGED EXCEPT LOADING) ------------------
@@ -162,12 +163,6 @@ function renderPage(index) {
                 <button onclick="goToPage(${question.questionNumber}, ${cachedQuestions.length - 1})"
                         style="margin-left: 20px; background:#4CAF50; color:white;">
                     Go to Last Question
-                </button>
-
-                <!-- Go to Submit Page Direct -->
-                <button onclick="goToPage(${question.questionNumber}, cachedQuestions.length)"
-                        style="margin-left: 20px; background:#2196F3; color:white;">
-                    Go to Submit Page
                 </button>
 
             </div>
