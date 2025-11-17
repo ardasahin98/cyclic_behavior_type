@@ -290,7 +290,17 @@ function renderPage(index) {
 
 }
 
-
+function getMaxStd(mean) {
+    let bestStd = 0;
+    for (let alpha = 1.01; alpha <= 100; alpha += 0.05) {
+        const beta = alpha * (1 - mean) / mean;
+        if (beta <= 1) continue;
+        const variance = (alpha * beta) / ((alpha + beta) ** 2 * (alpha + beta + 1));
+        const std = Math.sqrt(variance);
+        if (std > bestStd) bestStd = std;
+    }
+    return bestStd;
+}
 // ------------------ SAVE & RESTORE ANSWERS ------------------
 
 function updateSliderVisibility(q) {
