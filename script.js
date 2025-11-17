@@ -99,17 +99,16 @@ async function loadQuestions() {
 // ------------------ PAGE NAVIGATION (UNCHANGED) ------------------
 
 function navigatePage(index) {
-    const pages = document.querySelectorAll(".page");
-
-    // allow index = cachedQuestions.length (submit page)
-    if (index < -1 || index > cachedQuestions.length) {
-        console.error("Invalid navigation request. Index:", index);
-        return;
+    console.log(`Navigating to index: ${index}`);
+    if (index >= 0 && index < cachedQuestions.length) {
+        renderPage(index);
+    } else if (index === -1) {
+        renderPage(-1);
+    } else if (index === -2) {
+        renderPage(-2);
+    } else {
+        console.error(`Invalid navigation request. Index: ${index}`);
     }
-
-    pages.forEach(page => page.classList.remove("active"));
-
-    renderPage(index);
 }
 
 // ------------------ PAGE RENDERING (UNCHANGED EXCEPT LOADING) ------------------
@@ -140,30 +139,12 @@ function renderPage(index) {
                 <h2>Question ${question.questionNumber}/57</h2>
             </div>
             <div class="navigation-buttons">
-
-                <!-- Go to First Question -->
-                <button onclick="goToPage(${question.questionNumber}, 0)"
-                        style="margin-left: 20px; background:#4CAF50; color:white;">
-                    Go to First Question
-                </button>
-
-                <!-- Back -->
+            
                 <button onclick="goToPage(${question.questionNumber}, ${index - 1})"
-                        ${index === 0 ? "disabled" : ""}>
-                    Back
-                </button>
+                        ${index === 0 ? "disabled" : ""}>Back</button>
 
-                <!-- Next OR Go to Submit Page -->
-                <button 
-                    onclick="goToPage(${question.questionNumber}, ${index === cachedQuestions.length - 1 ? 'cachedQuestions.length' : index + 1})">
-                    ${index === cachedQuestions.length - 1 ? "Go to Submit Page" : "Next"}
-                </button>
-
-                <!-- Go to Last Question -->
-                <button onclick="goToPage(${question.questionNumber}, ${cachedQuestions.length - 1})"
-                        style="margin-left: 20px; background:#4CAF50; color:white;">
-                    Go to Last Question
-                </button>
+                <button onclick="goToPage(${question.questionNumber}, ${index + 1})"
+                        ${index === cachedQuestions.length - 1 ? "disabled" : ""}>Next</button>
 
             </div>
             <div style="justify-items:center">
