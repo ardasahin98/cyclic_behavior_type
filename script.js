@@ -42,12 +42,23 @@ async function googleLogin() {
 // Auto-login if user was already logged in previously
 auth.onAuthStateChanged(async (user) => {
     if (user) {
+
         currentUser = user;
+        console.log("Auth State Changed: Logged in as", user.email);
+
+        // Hide login, show quiz
         document.getElementById("login-page").style.display = "none";
         document.getElementById("quiz-container").style.display = "block";
 
+        // Load user data FIRST
         await loadExistingResponses();
-        loadQuestions();
+
+        // THEN load the quiz
+        if (cachedQuestions.length === 0) {
+            await loadQuestions();
+        }
+    } else {
+        console.log("Not logged in");
     }
 });
 
