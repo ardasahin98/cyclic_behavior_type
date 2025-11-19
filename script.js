@@ -80,10 +80,10 @@ async function emailOnlyLogin() {
 
     if (!emailPattern.test(email)) {
         errorDiv.textContent = "Please enter a valid email address.";
-        errorDiv.style.display = "block";
+        errorDiv.style.visibility = "visible";
         return;
     } else {
-        errorDiv.style.display = "none"; 
+        errorDiv.style.visibility = "hidden";
     }
 
     // Create local-only user object
