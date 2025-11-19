@@ -65,6 +65,49 @@ async function googleLogin() {
     }
 }
 
+// ------------------ EMAIL LINK LOGIN (PASSWORDLESS) ------------------
+
+async function sendEmailLink() {
+    const email = document.getElementById("email-login").value.trim();
+    if (!email) {
+        alert("Please enter an email.");
+        return;
+    }
+
+    const actionCodeSettings = {
+        url: window.location.href,  // Same page reload will complete sign-in
+        handleCodeInApp: true
+    };
+
+    try {
+        await auth.sendSignInLinkToEmail(email, actionCodeSettings);
+        window.localStorage.setItem("emailForSignIn", email);
+        alert("A login link has been emailed to you.");
+    } catch (error) {
+        console.error(error);
+        alert("Error sending email: " + error.message);
+    }
+}
+
+// Handle returning from email link
+if (auth.isSignInWithEmailLink(window.location.href)) {
+    let email = window.localStorage.getItem("emailForSignIn");
+
+    if (!email) {
+        email = window.prompt("Please confirm your email");
+    }
+
+    auth.signInWithEmailLink(email, window.location.href)
+        .then(result => {
+            window.localStorage.removeItem("emailForSignIn");
+            console.log("Signed in using email link:", result.user.email);
+        })
+        .catch(error => {
+            console.error(error);
+            alert("Email link sign-in failed: " + error.message);
+        });
+}
+
 
 // ------------------ LOAD PREVIOUS RESPONSES ------------------
 
