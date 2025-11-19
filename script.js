@@ -545,6 +545,7 @@ async function submitForm() {
 
     try {
         console.log("Saving to Firestore:", currentUser.uid);
+        console.log("SUBMIT ATTEMPT UID:", currentUser.uid);
         await db.collection("responses").doc(currentUser.uid).set(payload);
         alert("Your responses have been saved!");
 
