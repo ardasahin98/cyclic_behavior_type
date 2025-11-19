@@ -236,21 +236,31 @@ function renderPage(index) {
                     </div>
 
                     <div style="width:100%; text-align:center; margin-bottom:20px;">
-                        <div id="img_wrapper_${question.questionNumber}"
-                            class="resizable-wrapper"
-                            style="display:inline-block; resize:both; overflow:auto;
-                                    border:1px solid #ddd; padding:5px;
-                                    width:70%;        /* ⬅ fits the full width */
-                                    height:auto;       /* ⬅ natural height */
-                                    max-width:100%;    /* ⬅ don't overflow */
-                                    box-sizing:border-box;">
-
-                            <img id="strain_image_${question.questionNumber}"
-                                src=""
-                                alt="Strain Cycle Image"
-                                style="width:100%; height:auto; display:none; object-fit:contain;">
-                        </div>
+                    <div id="img_wrapper_${question.questionNumber}"
+                        class="resizable-wrapper"
+                        style="
+                            display:inline-block;
+                            resize:both;
+                            overflow:hidden;
+                            border:1px solid #ddd;
+                            padding:5px;
+                            width:70%;
+                            height:auto;
+                            max-width:100%;
+                            box-sizing:border-box;
+                        ">
+                        
+                        <img id="strain_image_${question.questionNumber}"
+                            src=""
+                            alt="Strain Cycle Image"
+                            style="
+                                width:100%;
+                                height:100%;
+                                display:none;
+                                object-fit:contain;
+                            ">
                     </div>
+                </div>
 
                     <div id="missing_image_${question.questionNumber}"
                         style="display:none; color:#a00; font-size:18px; font-weight:bold; text-align:center; margin:20px;">
@@ -412,6 +422,23 @@ function renderPage(index) {
     }
 
 }
+
+
+const imgEl = document.getElementById(`strain_image_${question.questionNumber}`);
+const wrapper = document.getElementById(`img_wrapper_${question.questionNumber}`);
+
+imgEl.onload = function () {
+
+    // natural dimensions of the loaded image
+    const natWidth = imgEl.naturalWidth;
+    const natHeight = imgEl.naturalHeight;
+
+    // limit wrapper height so it can never exceed image height
+    wrapper.style.maxHeight = natHeight + "px";
+
+    // initial image display
+    imgEl.style.display = "block";
+};
 
 document.addEventListener("mousedown", function (e) {
     const wrapper = e.target.closest(".resizable-wrapper");
