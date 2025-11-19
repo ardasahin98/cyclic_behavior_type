@@ -235,9 +235,8 @@ function renderPage(index) {
                         </select>
                     </div>
 
-                    <!-- ⭐ NEW RESIZABLE WRAPPER -->
                     <div class="resizable-wrapper"
-                        style="display:inline-block; position:relative; resize:both; overflow:hidden; 
+                        style="display:inline-block; position:relative; resize:vertical; overflow:hidden; 
                                 border:1px solid #ddd; width:450px; height:650px; margin-bottom:20px;">
 
                         <img id="strain_image_${question.questionNumber}"
