@@ -191,8 +191,8 @@ function renderPage(index) {
 
         const savedBehavior = responses[question.questionNumber]?.behavior || "";
         const savedComments = responses[question.questionNumber]?.comments || "";
-        const savedSliderValue = responses[question.questionNumber]?.sliderValue || 0.5;
-        const savedStdDev = responses[question.questionNumber]?.standardDeviation || 0.1;
+        const savedSliderValue = responses[question.questionNumber]?.slider || 0.5;
+        const savedStdDev = responses[question.questionNumber]?.stddev || 0.1;
 
         const questionDiv = document.createElement('div');
         questionDiv.className = 'page active dynamic-question';
@@ -612,17 +612,14 @@ function saveAnswer(q) {
     const isUnusable = unusableCheckbox && unusableCheckbox.checked;
 
     if (isUnusable) {
-        // data not usable case
         responses[q].behavior = "data not usable";
         responses[q].slider = "";
         responses[q].stddev = "";
     } else {
-        // normal slider case
         responses[q].behavior = slider ? slider.value : "";
         responses[q].slider = slider ? slider.value : "";
         responses[q].stddev = std ? std.value : "";
     }
-
     responses[q].comments = com ? com.value : "";
 }
 
