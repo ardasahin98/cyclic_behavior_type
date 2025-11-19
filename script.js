@@ -236,7 +236,7 @@ function renderPage(index) {
                     </div>
 
                     <div class="resizable-wrapper"
-                        style="display:inline-block; position:relative; resize:vertical; overflow:hidden; 
+                        style="display:inline-block; position:relative; resize:both; overflow:hidden; 
                                 border:1px solid #ddd; width:450px; height:650px; margin-bottom:20px;">
 
                         <img id="strain_image_${question.questionNumber}"
@@ -406,6 +406,28 @@ function renderPage(index) {
     }
 
 }
+
+document.addEventListener("mousedown", function (e) {
+    const wrapper = e.target.closest(".resizable-wrapper");
+    if (!wrapper) return;
+
+    const originalWidth = wrapper.offsetWidth;
+    const originalHeight = wrapper.offsetHeight;
+    const aspectRatio = originalWidth / originalHeight;
+
+    function onMouseMove() {
+        const newWidth = wrapper.offsetWidth;
+        wrapper.style.height = `${newWidth / aspectRatio}px`;
+    }
+
+    function stop() {
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", stop);
+    }
+
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", stop);
+});
 
 function getMaxStd(mean) {
     let bestStd = 0;
