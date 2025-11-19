@@ -83,15 +83,29 @@ async function emailOnlyLogin() {
         errorDiv.style.display = "block";
         return;
     } else {
-        errorDiv.style.display = "none"; // hide previous warning
+        errorDiv.style.display = "none"; 
     }
 
-    // Create fake user object (mimics Firebase auth user)
+    // Create local-only user object
     currentUser = {
         email: email,
         uid: generateFakeUID(),
         isLocalUser: true
     };
+
+    console.log("Email-only login:", currentUser);
+
+    // Load previous responses
+    await loadExistingResponsesByEmail(email);
+
+    // SHOW QUIZ
+    document.getElementById("login-page").style.display = "none";
+    document.getElementById("quiz-container").style.display = "block";
+
+    // Load questions if not loaded yet
+    if (cachedQuestions.length === 0) {
+        await loadQuestions();
+    }
 }
 
 // Load previous email-only responses
