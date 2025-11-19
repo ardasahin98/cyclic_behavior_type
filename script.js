@@ -240,7 +240,7 @@ function renderPage(index) {
                             class="resizable-wrapper"
                             style="display:inline-block; resize:both; overflow:hidden;
                                     border:1px solid #ddd; padding:5px;
-                                    width:100%;        /* ⬅ fits the full width */
+                                    width:70%;        /* ⬅ fits the full width */
                                     height:auto;       /* ⬅ natural height */
                                     max-width:100%;    /* ⬅ don't overflow */
                                     box-sizing:border-box;">
