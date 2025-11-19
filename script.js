@@ -284,22 +284,26 @@ function renderPage(index) {
                         </label>
 
                         <div style="margin-top:10px; display:flex; flex-direction:column;">
-                            <label><b>Standard Deviation:</b></label>
 
-                            <input 
-                                type="number" 
-                                id="stddev_${question.questionNumber}"
-                                value="${savedStdDev}" 
-                                min="0.01" 
-                                step="0.01"
-                                style="width:100px; margin-top:6px;"
-                                ${savedBehavior === "data not usable" ? "disabled" : ""}
-                            >
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <label><b>Standard Deviation:</b></label>
+
+                                <input 
+                                    type="number" 
+                                    id="stddev_${question.questionNumber}"
+                                    value="${savedStdDev}" 
+                                    min="0.01" 
+                                    step="0.01"
+                                    style="width:100px;"
+                                    ${savedBehavior === "data not usable" ? "disabled" : ""}
+                                >
+                            </div>
 
                             <span 
                                 id="max_stddev_${question.questionNumber}" 
-                                style="font-size:14px; color:#888; margin-top:6px;"
+                                style="font-size:14px; color:#888; margin-top:5px;"
                             ></span>
+
                         </div>
                     </div>
 
