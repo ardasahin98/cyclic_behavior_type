@@ -485,6 +485,27 @@ function getMaxStd(mean) {
     return bestStd;
 }
 
+async function saveProgressToFirestore() {
+    if (!currentUser) return;
+
+    const name = document.getElementById("researcher-name")?.value || "";
+
+    const payload = {
+        uid: currentUser.uid,
+        email: currentUser.email,
+        name: name,
+        responses: responses,
+        savedAt: new Date().toISOString()
+    };
+
+    try {
+        await db.collection("responses").doc(currentUser.uid).set(payload, { merge: true });
+        console.log("Auto-saved progress");
+    } catch (err) {
+        console.error("Auto-save failed:", err);
+    }
+}
+
 function plotBeta(questionNumber) {
     const meanInput = document.getElementById(`slider_${questionNumber}`);
     const stddevInput = document.getElementById(`stddev_${questionNumber}`);
@@ -655,11 +676,16 @@ async function submitForm() {
     }
 }
 
-function goToPage(currentQuestionNumber, nextPageIndex) {
-    // Save only if current question is valid
+async function goToPage(currentQuestionNumber, nextPageIndex) {
+    // Save locally
     if (currentQuestionNumber >= 1 && currentQuestionNumber <= 57) {
         saveAnswer(currentQuestionNumber);
     }
+
+    // 🔥 Auto-save to Firestore
+    await saveProgressToFirestore();
+
+    // Navigate
     navigatePage(nextPageIndex);
 }
 
