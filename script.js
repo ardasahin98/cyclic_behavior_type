@@ -73,8 +73,11 @@ function generateFakeUID() {
 
 async function emailOnlyLogin() {
     const email = document.getElementById("email-login").value.trim();
-    if (!email) {
-        alert("Please enter your email.");
+// Basic email validation
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailPattern.test(email)) {
+        alert("Please enter a valid email address.");
         return;
     }
 
