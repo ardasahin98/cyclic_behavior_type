@@ -73,33 +73,25 @@ function generateFakeUID() {
 
 async function emailOnlyLogin() {
     const email = document.getElementById("email-login").value.trim();
-// Basic email validation
+    const errorDiv = document.getElementById("email-error");
+
+    // Basic email validation
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailPattern.test(email)) {
-        alert("Please enter a valid email address.");
+        errorDiv.textContent = "Please enter a valid email address.";
+        errorDiv.style.display = "block";
         return;
+    } else {
+        errorDiv.style.display = "none"; // hide previous warning
     }
 
     // Create fake user object (mimics Firebase auth user)
     currentUser = {
         email: email,
         uid: generateFakeUID(),
-        isLocalUser: true   // mark this as non-auth user
+        isLocalUser: true
     };
-
-    console.log("Email-only login:", currentUser);
-
-    // Try loading existing responses by email
-    await loadExistingResponsesByEmail(email);
-
-    // Show quiz
-    document.getElementById("login-page").style.display = "none";
-    document.getElementById("quiz-container").style.display = "block";
-
-    if (cachedQuestions.length === 0) {
-        await loadQuestions();
-    }
 }
 
 // Load previous email-only responses
