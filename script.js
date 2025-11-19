@@ -201,13 +201,13 @@ function renderPage(index) {
             <div class="question-header">
                 <h2>Question ${question.questionNumber}/57</h2>
             </div>
-            <div class="navigation-buttons">
 
+            <div class="navigation-buttons">
                 <button onclick="goToPage(${question.questionNumber}, 0)"
                         style="margin-left: 20px; background:#4CAF50; color:white;">
                     Go to First Question
                 </button>
-            
+
                 <button onclick="goToPage(${question.questionNumber}, ${index - 1})"
                         ${index === 0 ? "disabled" : ""}>Back</button>
 
@@ -220,10 +220,11 @@ function renderPage(index) {
                         style="margin-left: 20px; background:#4CAF50; color:white;">
                     Go to Last Question
                 </button>
-
             </div>
+
             <div style="justify-items:center">
                 <div class="image-container">
+
                     <div style="text-align:center; margin-bottom:10px;">
                         <select id="strain_select_${question.questionNumber}" class="strain-selector" style="position:static;">
                             <option value="3_Strain_Cycle">3% Strain</option>
@@ -233,49 +234,74 @@ function renderPage(index) {
                             <option value="Last_Cycle">Last Cycle</option>
                         </select>
                     </div>
-                    <div style = "height:650px; margin-bottom: 20px;">
-                    
-                            <img id="strain_image_${question.questionNumber}"
-                                src=""
-                                alt="Strain Cycle Image"
-                                style="height:650px; width:auto; border:1px solid #ddd; padding:5px; margin-bottom:30px; display:none;">
+
+                    <!-- ⭐ NEW RESIZABLE WRAPPER -->
+                    <div class="resizable-wrapper"
+                        style="display:inline-block; position:relative; resize:both; overflow:hidden; 
+                                border:1px solid #ddd; width:450px; height:650px; margin-bottom:20px;">
+
+                        <img id="strain_image_${question.questionNumber}"
+                            src=""
+                            alt="Strain Cycle Image"
+                            style="width:100%; height:100%; object-fit:contain; display:none;">
+
                     </div>
+
                     <div id="missing_image_${question.questionNumber}"
                         style="display:none; color:#a00; font-size:18px; font-weight:bold; text-align:center; margin:20px;">
                     </div>
+
                 </div>
             </div>
+
             <div style="display:flex; margin-top:-40px">
                 <div class="multiple-choice" style="padding-left:10%">
                     <p>Please select the behavior type:</p>
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <label>Clay-like (0.01)</label>
-                        <input type="range" id="slider_${question.questionNumber}" min="0.01" max="0.99" step="0.01" value="${savedSliderValue}" ${savedBehavior === "data not usable" ? "disabled" : ""}>
+                        <input type="range" id="slider_${question.questionNumber}" min="0.01" max="0.99" step="0.01"
+                            value="${savedSliderValue}"
+                            ${savedBehavior === "data not usable" ? "disabled" : ""}>
                         <label>Sand-like (0.99)</label>
                     </div>
+
                     <p>Current Value: 
-                        <input type="number" id="slider_input_${question.questionNumber}" value="${savedSliderValue}" min="0.01" max="0.99" step="0.01" style="width: 60px;" ${savedBehavior === "data not usable" ? "disabled" : ""}>
+                        <input type="number" id="slider_input_${question.questionNumber}"
+                            value="${savedSliderValue}" min="0.01" max="0.99" step="0.01"
+                            style="width: 60px;"
+                            ${savedBehavior === "data not usable" ? "disabled" : ""}>
                         <span id="mean_range_${question.questionNumber}" style="margin-left:10px; font-size: 14px; color: #888;"></span>
                     </p>
+
                     <label>
-                        <input type="checkbox" name="behavior_${question.questionNumber}" value="data not usable" ${savedBehavior === "data not usable" ? "checked" : ""}>
+                        <input type="checkbox" name="behavior_${question.questionNumber}" value="data not usable"
+                            ${savedBehavior === "data not usable" ? "checked" : ""}>
                         Data is not usable
                     </label>
+
                     <div style="margin-top:10px">
                         <label><b>Standard Deviation:</b></label>
-                        <input type="number" id="stddev_${question.questionNumber}" value="${savedStdDev}" min = "0.01" step="0.01" style="width:100px;" ${savedBehavior === "data not usable" ? "disabled" : ""}>
+                        <input type="number" id="stddev_${question.questionNumber}"
+                            value="${savedStdDev}" min="0.01" step="0.01" style="width:100px;"
+                            ${savedBehavior === "data not usable" ? "disabled" : ""}>
                         <span id="max_stddev_${question.questionNumber}" style="margin-left:10px; font-size: 14px; color: #888;"></span>
                     </div>
                 </div>
-                <div id="plot_${question.questionNumber}" style="width:500px;height:300px;margin:30px;"></div>
+
+                <div id="plot_${question.questionNumber}"
+                    style="width:500px;height:300px;margin:30px;">
+                </div>
+
                 <div class="comments-section" style="margin-right: auto; width: 400px;">
                     <h3>Comments</h3>
                     <textarea id="comments_${question.questionNumber}" rows="5" placeholder="Enter your comments here...">${savedComments}</textarea>
                 </div>
             </div>
+
             <div class="navigation-buttons" style="margin-top:-10px">
-                <button onclick="goToPage(${question.questionNumber}); navigatePage(${index - 1})" ${index === 0 ? 'disabled' : ''}>Back</button>
-                <button onclick="goToPage(${question.questionNumber}, 
+                <button onclick="goToPage(${question.questionNumber}); navigatePage(${index - 1})"
+                        ${index === 0 ? 'disabled' : ''}>Back</button>
+                <button onclick="goToPage(${question.questionNumber},
                         ${index === cachedQuestions.length - 1 ? -2 : index + 1})">
                     ${index === cachedQuestions.length - 1 ? "Submit Page" : "Next"}
                 </button>
