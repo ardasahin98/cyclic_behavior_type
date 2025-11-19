@@ -65,47 +65,58 @@ async function googleLogin() {
     }
 }
 
-// ------------------ EMAIL LINK LOGIN (PASSWORDLESS) ------------------
+// ------------------ EMAIL-ONLY LOGIN (NO AUTH) ------------------
 
-async function sendEmailLink() {
+function generateFakeUID() {
+    return "local_" + Math.random().toString(36).substr(2, 9) + Date.now();
+}
+
+async function emailOnlyLogin() {
     const email = document.getElementById("email-login").value.trim();
     if (!email) {
-        alert("Please enter an email.");
+        alert("Please enter your email.");
         return;
     }
 
-    const actionCodeSettings = {
-        url: window.location.href,  // Same page reload will complete sign-in
-        handleCodeInApp: true
+    // Create fake user object (mimics Firebase auth user)
+    currentUser = {
+        email: email,
+        uid: generateFakeUID(),
+        isLocalUser: true   // mark this as non-auth user
     };
 
-    try {
-        await auth.sendSignInLinkToEmail(email, actionCodeSettings);
-        window.localStorage.setItem("emailForSignIn", email);
-        alert("A login link has been emailed to you.");
-    } catch (error) {
-        console.error(error);
-        alert("Error sending email: " + error.message);
+    console.log("Email-only login:", currentUser);
+
+    // Try loading existing responses by email
+    await loadExistingResponsesByEmail(email);
+
+    // Show quiz
+    document.getElementById("login-page").style.display = "none";
+    document.getElementById("quiz-container").style.display = "block";
+
+    if (cachedQuestions.length === 0) {
+        await loadQuestions();
     }
 }
 
-// Handle returning from email link
-if (auth.isSignInWithEmailLink(window.location.href)) {
-    let email = window.localStorage.getItem("emailForSignIn");
+// Load previous email-only responses
+async function loadExistingResponsesByEmail(email) {
+    const snap = await db
+        .collection("responses")
+        .where("email", "==", email)
+        .limit(1)
+        .get();
 
-    if (!email) {
-        email = window.prompt("Please confirm your email");
+    if (!snap.empty) {
+        const data = snap.docs[0].data();
+        responses = data.responses || {};
+
+        // reuse old uid to keep consistency
+        currentUser.uid = data.uid;
+
+        document.getElementById("researcher-name").value = data.name || "";
+        console.log("Loaded saved email-only responses.");
     }
-
-    auth.signInWithEmailLink(email, window.location.href)
-        .then(result => {
-            window.localStorage.removeItem("emailForSignIn");
-            console.log("Signed in using email link:", result.user.email);
-        })
-        .catch(error => {
-            console.error(error);
-            alert("Email link sign-in failed: " + error.message);
-        });
 }
 
 
