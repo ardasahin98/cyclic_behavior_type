@@ -238,7 +238,7 @@ function renderPage(index) {
                     <div style="width:100%; text-align:center; margin-bottom:20px;">
                         <div id="img_wrapper_${question.questionNumber}"
                             class="resizable-wrapper"
-                            style="display:inline-block; resize:both; overflow:hidden;
+                            style="display:inline-block; resize:both; overflow:auto;
                                     border:1px solid #ddd; padding:5px;
                                     width:70%;        /* ⬅ fits the full width */
                                     height:auto;       /* ⬅ natural height */
