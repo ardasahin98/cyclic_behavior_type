@@ -235,15 +235,21 @@ function renderPage(index) {
                         </select>
                     </div>
 
-                    <div class="resizable-wrapper"
-                        style="display:inline-block; position:relative; resize:both; overflow:hidden; 
-                                border:1px solid #ddd; width:450px; height:650px; margin-bottom:20px;">
+                    <div style="width:100%; text-align:center; margin-bottom:20px;">
+                        <div id="img_wrapper_${question.questionNumber}"
+                            class="resizable-wrapper"
+                            style="display:inline-block; resize:both; overflow:hidden;
+                                    border:1px solid #ddd; padding:5px;
+                                    width:100%;        /* ⬅ fits the full width */
+                                    height:auto;       /* ⬅ natural height */
+                                    max-width:100%;    /* ⬅ don't overflow */
+                                    box-sizing:border-box;">
 
-                        <img id="strain_image_${question.questionNumber}"
-                            src=""
-                            alt="Strain Cycle Image"
-                            style="width:100%; height:100%; object-fit:contain; display:none;">
-
+                            <img id="strain_image_${question.questionNumber}"
+                                src=""
+                                alt="Strain Cycle Image"
+                                style="width:100%; height:auto; display:none; object-fit:contain;">
+                        </div>
                     </div>
 
                     <div id="missing_image_${question.questionNumber}"
