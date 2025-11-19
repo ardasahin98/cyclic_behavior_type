@@ -236,31 +236,31 @@ function renderPage(index) {
                     </div>
 
                     <div style="width:100%; text-align:center; margin-bottom:20px;">
-                    <div id="img_wrapper_${question.questionNumber}"
-                        class="resizable-wrapper"
-                        style="
-                            display:inline-block;
-                            resize:both;
-                            overflow:hidden;
-                            border:1px solid #ddd;
-                            padding:5px;
-                            width:70%;
-                            height:auto;
-                            max-width:100%;
-                            box-sizing:border-box;
-                        ">
-                        
-                        <img id="strain_image_${question.questionNumber}"
-                            src=""
-                            alt="Strain Cycle Image"
+                        <div id="img_wrapper_${question.questionNumber}"
+                            class="resizable-wrapper"
                             style="
-                                width:100%;
-                                height:100%;
-                                display:none;
-                                object-fit:contain;
+                                display:inline-block;
+                                resize:both;
+                                overflow:hidden;
+                                border:1px solid #ddd;
+                                padding:5px;
+                                width:70%;
+                                height:auto;
+                                max-width:100%;
+                                box-sizing:border-box;
                             ">
+                            
+                            <img id="strain_image_${question.questionNumber}"
+                                src=""
+                                alt="Strain Cycle Image"
+                                style="
+                                    width:100%;
+                                    height:100%;
+                                    display:none;
+                                    object-fit:contain;
+                                ">
+                        </div>
                     </div>
-                </div>
 
                     <div id="missing_image_${question.questionNumber}"
                         style="display:none; color:#a00; font-size:18px; font-weight:bold; text-align:center; margin:20px;">
