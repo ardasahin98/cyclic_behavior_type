@@ -235,7 +235,7 @@ function renderPage(index) {
                         </select>
                     </div>
 
-                    <div style="width:100%; text-align:center; margin-bottom:20px;">
+                    <div style="width:700px; text-align:center; margin-bottom:20px;">
                         <div id="img_wrapper_${question.questionNumber}"
                             class="resizable-wrapper"
                             style="display:inline-block; resize:both; overflow:hidden;
